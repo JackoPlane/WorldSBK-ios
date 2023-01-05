@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SessionUpdate: ReplayEventUpdate, Decodable {
+struct SessionUpdate: ReplayEventUpdate, Codable {
 
     enum Status: Int, Codable, CustomStringConvertible {
         case redFlag = 0

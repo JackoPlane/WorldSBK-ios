@@ -32,6 +32,8 @@ class RiderNode: SKNode {
 
         addChild(circle)
         addChild(label)
+
+        zPosition = 9999
     }
 
     required init?(coder aDecoder: NSCoder) {

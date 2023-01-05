@@ -199,7 +199,7 @@ final class TrackScene: ScrollScene {
             masterTrackNode?.addChild(riderNode!)
 
         } else {
-            print("Ride #\(number) position: \(riderNode.position)")
+            // print("Ride #\(number) position: \(riderNode.position)")
         }
 
         // Animation calc
@@ -212,7 +212,7 @@ final class TrackScene: ScrollScene {
             animationDuration -= Double(timePassed)
         }
 
-        print("Rider #\(number), Section: \(section) (Current: \(riderNode.section)), animation duration: \(animationDuration/1000)")
+        // print("Rider #\(number), Section: \(section) (Current: \(riderNode.section)), animation duration: \(animationDuration/1000)")
 
         var followPath: CGPath!
         if riderNode.section != section {

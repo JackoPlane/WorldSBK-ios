@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NoteUpdate: ReplayEventUpdate, Decodable {
+struct NoteUpdate: ReplayEventUpdate, Codable {
 
     var type: EventUpdateType = .note
 

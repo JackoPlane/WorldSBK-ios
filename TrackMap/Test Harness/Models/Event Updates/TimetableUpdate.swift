@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TimetableUpdate: ReplayEventUpdate, Decodable {
+struct TimetableUpdate: ReplayEventUpdate, Codable {
 
     var type: EventUpdateType = .timetable
 

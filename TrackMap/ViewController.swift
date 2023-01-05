@@ -14,6 +14,9 @@ import SFSafeSymbols
 
 class ViewController: UIViewController {
 
+    private let hub = LiveTimingHub()
+    private var cancellables = Set<AnyCancellable>()
+
     private let viewModel: ViewModel
 
     private lazy var trackView: UIView = {
@@ -21,6 +24,24 @@ class ViewController: UIViewController {
     }()
     private lazy var trackViewController: TrackViewController = {
         let viewController = TrackViewController(useScrollView: false)
+        return viewController
+    }()
+
+    private func showCompetitorsContainer(_ traitCollection: UITraitCollection? = nil) -> Bool {
+        if UIDevice.current.userInterfaceIdiom != .phone || (traitCollection ?? view.traitCollection).horizontalSizeClass != .compact {
+            return true
+        }
+
+        return false
+    }
+
+
+    private lazy var competitorsContainer: UIView = {
+        return UIView()
+    }()
+
+    private lazy var competitorsViewController: CompetitorsViewController = {
+        let viewController = CompetitorsViewController()
         return viewController
     }()
 
@@ -109,6 +130,37 @@ class ViewController: UIViewController {
         } else {
             buttonStack.axis = .horizontal
         }
+
+        let wasShowingCompetitors = showCompetitorsContainer(previousTraitCollection)
+        let shouldShowCompetitors = showCompetitorsContainer(traitCollection)
+        if wasShowingCompetitors != shouldShowCompetitors {
+
+            // We need to show the view(s)
+            if wasShowingCompetitors == false, shouldShowCompetitors == true {
+                trackView.snp.makeConstraints { make in
+                    make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(8)
+                    make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+                    make.trailing.equalTo(competitorsContainer.snp.leading).inset(-8)
+                }
+
+                competitorsContainer.snp.updateConstraints { make in
+                    make.top.trailing.equalTo(view.safeAreaLayoutGuide)
+                    make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+                    make.width.lessThanOrEqualTo(300)
+                }
+            } else {
+                trackView.snp.updateConstraints { make in
+                    make.trailing.equalTo(competitorsContainer.snp.leading).inset(-8)
+                }
+
+                competitorsContainer.snp.updateConstraints { make in
+                    make.size.equalTo(CGSize.zero)
+                }
+            }
+
+
+        }
+
     }
 
     // MARK: - Helpers
@@ -138,6 +190,10 @@ class ViewController: UIViewController {
         view.addSubview(trackView)
         add(childViewController: trackViewController, to: trackView)
 
+        // Add the competitors controller if we're on iPad
+        view.addSubview(competitorsContainer)
+        add(childViewController: UINavigationController(rootViewController: competitorsViewController), to: competitorsContainer)
+
         // Unless we're using a compact size class or on iPhone, use horizontal layout
         if traitCollection.horizontalSizeClass == .compact || UIDevice.current.userInterfaceIdiom == .phone {
             buttonStack.axis = .vertical
@@ -147,13 +203,35 @@ class ViewController: UIViewController {
         buttonStack.addArrangedSubview(loadTrackButton)
         buttonStack.addArrangedSubview(raceReplayButton)
         buttonStack.addArrangedSubview(arButton)
-        buttonStack.addArrangedSubview(ridersButton)
+
+        if showCompetitorsContainer() == false {
+            buttonStack.addArrangedSubview(ridersButton)
+        }
     }
 
     private func configureLayout() {
-        trackView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(8)
-            make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+        if showCompetitorsContainer() {
+            trackView.snp.makeConstraints { make in
+                make.top.leading.equalTo(view.safeAreaLayoutGuide).inset(8)
+                make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+                make.trailing.equalTo(competitorsContainer.snp.leading).inset(-8)
+            }
+
+            competitorsContainer.snp.makeConstraints { make in
+                make.top.trailing.equalTo(view.safeAreaLayoutGuide)
+                make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+                make.width.lessThanOrEqualTo(300)
+            }
+
+        } else {
+            trackView.snp.makeConstraints { make in
+                make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(8)
+                make.bottom.equalTo(buttonStack.snp.top).offset(-8)
+            }
+
+            competitorsContainer.snp.makeConstraints { make in
+                make.size.equalTo(CGSize.zero)
+            }
         }
 
         buttonStack.snp.makeConstraints { make in
@@ -165,6 +243,41 @@ class ViewController: UIViewController {
     private func configureBindings() {
         loadTrackButton.addTarget(self, action: #selector(loadTrackPrimaryActionTriggered(_:)), for: .primaryActionTriggered)
         raceReplayButton.addTarget(self, action: #selector(startRaceReplayTriggered(_:)), for: .primaryActionTriggered)
+        ridersButton.addTarget(self, action: #selector(displayCompetitorsTriggered), for: .primaryActionTriggered)
+
+        hub.eventUpdates
+            .sink(receiveValue: { [weak self] update in
+                switch update {
+                case .competitors(let update, _):
+                    self?.competitorsViewController.updateCompetitors(update)
+                case .note(let note, _):
+                    self?.trackViewController.handleNoteUpdate(note)
+                case .rider(let rider, _):
+                    self?.trackViewController.handleRiderUpdate(rider)
+                case .session(let session, _):
+                    self?.trackViewController.handleSessionUpdate(session)
+                case .event(let event, _):
+                    print("EVENT UPDATE: \(event.name), race: \(event.race), Circuit: \(event.circuitName), session: \(event.session), sections: \(event.numberOfCircuitSections), trial: \(event.isTrialSession), weather: \(event.weather.conditions)")
+
+                case .results:
+                    print("Results update..")
+
+                default:
+                    break
+                }
+
+                self?.hubUpdate(update)
+            }).store(in: &cancellables)
+    }
+
+    private func hubUpdate(_ update: HubEvent? = nil) {
+        guard let update else { return }
+
+        if case let .unsupported(type) = update {
+            print("HUB Update: unsupported, type: \(type)")
+        } else {
+            print("HUB Update: \(update)")
+        }
     }
 
     // MARK: - Actions
@@ -200,7 +313,7 @@ class ViewController: UIViewController {
         }
 
         sender.configuration?.showsActivityIndicator = false
-        sender.configuration?.title = "Load"
+        sender.configuration?.title = "Load Track"
     }
 
     @objc
@@ -227,20 +340,15 @@ class ViewController: UIViewController {
         }
 
         // Load the replayer
-        self.raceReplayer = RaceReplayer(fileName: "ReplayRaceOnly") { [unowned self] update in
-            switch update.updateType {
-            case .rider where update.event is RiderUpdate:
-                trackViewController.handleRiderUpdate(update.event as! RiderUpdate)
-            case .note where update.event is NoteUpdate:
-                trackViewController.handleNoteUpdate(update.event as! NoteUpdate)
-            case .session:
-                trackViewController.handleSessionUpdate(update.event as! SessionUpdate)
-            default:
-                break
-            }
-        }
+        self.raceReplayer = RaceReplayer(fileName: "ReplayRaceOnly")
 
-        self.raceReplayer?.start()
+        self.raceReplayer?.start(withHub: hub)
+    }
+
+    @objc private func displayCompetitorsTriggered() {
+        guard UIDevice.current.userInterfaceIdiom == .phone else { return }
+
+        present(UINavigationController(rootViewController: competitorsViewController), animated: true)
     }
 
 }

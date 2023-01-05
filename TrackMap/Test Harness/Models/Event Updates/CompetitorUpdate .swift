@@ -7,9 +7,74 @@
 
 import Foundation
 
-struct CompetitorUpdate: ReplayEventUpdate, Decodable {
+struct CompetitorUpdate: ReplayEventUpdate, Codable, Hashable {
 
     var type: EventUpdateType = .riders
+
+
+    let position: Int
+    let riderNumber: Int
+
+    let firstName: String
+    let surname: String
+
+    let brand: String
+    let team: String
+    let motorcycle: String
+
+    let nationality: String
+
+    // MARK: - Errors
+
+
+    enum CompetitorUpdateError: Error {
+        case decodingError
+    }
+
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey {
+        case position = "gu"
+        case riderNumber = "nu"
+
+        case firstName = "no"
+        case surname = "co" // Cognome
+
+        case brand = "me"
+        case team = "te"
+        case motorcycle = "mo" // Motociclo
+
+        case nationality = "na" // n=Nazionalità
+    }
+
+
+    // MARK: - Decoding
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        if let rider = Int(try container.decode(String.self, forKey: .riderNumber)) {
+            self.riderNumber = rider
+        } else {
+            throw CompetitorUpdateError.decodingError
+        }
+
+        self.position = try container.decode(Int.self, forKey: .position)
+
+        self.firstName = try container.decode(String.self, forKey: .firstName)
+        self.surname = try container.decode(String.self, forKey: .surname)
+
+        self.brand = try container.decode(String.self, forKey: .brand)
+        self.team = try container.decode(String.self, forKey: .team)
+        self.motorcycle = try container.decode(String.self, forKey: .motorcycle)
+
+        self.nationality = try container.decode(String.self, forKey: .nationality)
+    }
+
+    // MARK: - Encoding
+
+
+
 
 
 //    function l(n) {
@@ -32,3 +97,14 @@ struct CompetitorUpdate: ReplayEventUpdate, Decodable {
 //    }
 
 }
+
+//{
+//                "nu": "1",
+//                "me": "Kawasaki",
+//                "gu": 1,
+//                "na": "GBR",
+//                "co": "REA",
+//                "no": "Jonathan",
+//                "mo": "ZX-10RR",
+//                "te": "Kawasaki Racing Team WorldSBK"
+//            }

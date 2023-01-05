@@ -12,7 +12,7 @@ public struct ReplayUpdate: Decodable {
     public let name: String
     public let timestamp: Date
     public let updateType: EventUpdateType?
-    public let event: ReplayEventUpdate?
+    public let events: [ReplayEventUpdate]?
 
     // MARK: - Codable
 
@@ -36,26 +36,33 @@ public struct ReplayUpdate: Decodable {
             // Decode event object
             switch updateType {
             case .rider:
-                self.event = try container.decode([RiderUpdate].self, forKey: .event).first!
+                self.events = [(try container.decode([RiderUpdate].self, forKey: .event).first!)]
             case .note:
-                self.event = (try? container.decode([NoteUpdate].self, forKey: .event))?.first
+                let notes = try container.decode([NoteUpdate].self, forKey: .event)
+                self.events = [] + notes.compactMap { $0 }
             case .session:
-                self.event = try container.decode([SessionUpdate].self, forKey: .event).first!
+                self.events = [(try container.decode([SessionUpdate].self, forKey: .event).first!)]
 
-//            case .timetable:
+            case .riders:
+                self.events = ((try container.decode([[CompetitorUpdate]].self, forKey: .event).first)!).compactMap { $0 }
+
+            case .event:
+                self.events = [] + (try container.decode([EventUpdate].self, forKey: .event)).compactMap { $0 }
+                
+//            case .riders:
 //                let args: [Any] = try container.decode(Array<Any>.self, forKey: .event)
 //                print("Timetable update: \(args)")
 //                self.event = nil
 
             default:
-                self.event = nil
+                self.events = nil
             }
         } else {
             let args: [String: Any] = try container.decode([String: Any].self, forKey: .event)
             print("UNKNOWN TYPE: \(self.name), Args: \(args)")
 
             self.updateType = nil
-            self.event = nil
+            self.events = nil
         }
     }
 

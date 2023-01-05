@@ -9,18 +9,17 @@ import Foundation
 
 public class RaceReplayer {
 
-    private let updates: [ReplayUpdate]
+    private let updates: [HubEvent]
+
+    private var hub: LiveTimingHub?
 
     private var timer: Timer?
 
     public private(set) var isReplaying: Bool = false
-    public var emitter: ((ReplayUpdate) -> Void)? = nil
 
     // MARK: - Init
 
-    public init?(fileName: String, emitter: ((ReplayUpdate) -> Void)? = nil) {
-        self.emitter = emitter
-
+    public init?(fileName: String) {
         guard let filePath = Bundle.main.url(forResource: fileName, withExtension: "json") else {
             return nil
         }
@@ -30,10 +29,14 @@ public class RaceReplayer {
             let jsonDecoder = JSONDecoder()
             jsonDecoder.dateDecodingStrategy = .iso8601
 
-            let updates = try jsonDecoder.decode([ReplayUpdate].self, from: jsonData)
-
-            let trimmedUpdates = Array(updates.dropFirst(200)) as? [ReplayUpdate]
-            self.updates = trimmedUpdates?.compactMap { $0 } ?? []
+            let allUpdates = try jsonDecoder.decode([HubEvent].self, from: jsonData)
+            self.updates = allUpdates.filter {
+                if case .unsupported = $0 {
+                    return false
+                } else {
+                    return true
+                }
+            }
         } catch {
             print("Error occurred: \(error)")
             return nil
@@ -43,7 +46,8 @@ public class RaceReplayer {
 
     // MARK: - Replaying
 
-    func start() {
+    func start(withHub hub: LiveTimingHub? = nil) {
+        self.hub = hub
         isReplaying = true
         emitEvent(atIndex: updates.startIndex)
     }
@@ -54,9 +58,9 @@ public class RaceReplayer {
         self.timer = nil
     }
 
-    // MARK: - Event Emiting
+    // MARK: - Event Emitting
 
-    private func emitEvent(atIndex index: Array<ReplayUpdate>.Index) {
+    private func emitEvent(atIndex index: Array<HubEvent>.Index) {
         // Reset the timer
         // Invalidate and cleanup existing timer object
         self.timer?.invalidate()
@@ -68,13 +72,18 @@ public class RaceReplayer {
         let event = updates[index]
 
         // Emit event
-        emitter?(event)
+        hub?.didGetUpdate(event)
 
         // Check if theres more events
         let nextIndex = index.advanced(by: 1)
         if nextIndex != updates.endIndex {
             let nextEvent = updates[nextIndex]
-            let timeDiff = event.timestamp.distance(to: nextEvent.timestamp)
+            var timeDiff = event.timestamp.distance(to: nextEvent.timestamp)
+
+            // Speed though the first 200 events
+            if nextIndex < 200 {
+                timeDiff /= 10
+            }
 
             // Finally, create a timer. This specifically needs to be created on the main thread
             DispatchQueue.main.async { [weak self] in

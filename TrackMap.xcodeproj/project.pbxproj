@@ -12,6 +12,12 @@
 		04038A1929557C050079954F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038A1829557C050079954F /* ViewController.swift */; };
 		04038A1E29557C050079954F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04038A1D29557C050079954F /* Assets.xcassets */; };
 		04038A2129557C050079954F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04038A1F29557C050079954F /* LaunchScreen.storyboard */; };
+		04468764295AB6AF004A7E00 /* UpdateEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04468763295AB6AF004A7E00 /* UpdateEvent.swift */; };
+		0464A3112958B13E008F082B /* Sequence+SortedKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464A3102958B13E008F082B /* Sequence+SortedKeyPath.swift */; };
+		0464A3142958B279008F082B /* CompetitorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464A3132958B279008F082B /* CompetitorsViewController.swift */; };
+		0464A316295964B7008F082B /* CompetitorCollectionViewListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0464A315295964B7008F082B /* CompetitorCollectionViewListCell.swift */; };
+		0477B25C295B26CB0000B1DA /* LiveTimingHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477B25B295B26CB0000B1DA /* LiveTimingHub.swift */; };
+		0477B25E295B50AA0000B1DA /* ResultUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0477B25D295B50AA0000B1DA /* ResultUpdate.swift */; };
 		04963D1E29557E4700AD5765 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 04963D1D29557E4700AD5765 /* SnapKit */; };
 		04963D2029557F2300AD5765 /* UIStackView+Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04963D1F29557F2300AD5765 /* UIStackView+Builder.swift */; };
 		04963D232955825F00AD5765 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = 04963D222955825F00AD5765 /* SFSafeSymbols */; };
@@ -52,6 +58,13 @@
 		04038A1D29557C050079954F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04038A2029557C050079954F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		04038A2229557C050079954F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04468763295AB6AF004A7E00 /* UpdateEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateEvent.swift; sourceTree = "<group>"; };
+		0464A30F2958535B008F082B /* TrackMap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TrackMap.entitlements; sourceTree = "<group>"; };
+		0464A3102958B13E008F082B /* Sequence+SortedKeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+SortedKeyPath.swift"; sourceTree = "<group>"; };
+		0464A3132958B279008F082B /* CompetitorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitorsViewController.swift; sourceTree = "<group>"; };
+		0464A315295964B7008F082B /* CompetitorCollectionViewListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitorCollectionViewListCell.swift; sourceTree = "<group>"; };
+		0477B25B295B26CB0000B1DA /* LiveTimingHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTimingHub.swift; sourceTree = "<group>"; };
+		0477B25D295B50AA0000B1DA /* ResultUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultUpdate.swift; sourceTree = "<group>"; };
 		04963D1F29557F2300AD5765 /* UIStackView+Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Builder.swift"; sourceTree = "<group>"; };
 		04963D242955835400AD5765 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		04963D262955858B00AD5765 /* NotImplementedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotImplementedError.swift; sourceTree = "<group>"; };
@@ -117,12 +130,15 @@
 		04038A1329557C050079954F /* TrackMap */ = {
 			isa = PBXGroup;
 			children = (
+				04468761295AB5FF004A7E00 /* Models */,
+				0464A30F2958535B008F082B /* TrackMap.entitlements */,
 				04B30B1E295851A000389F87 /* View Controllers */,
 				04963D3D2955ABEF00AD5765 /* Settings */,
 				04038A1429557C050079954F /* AppDelegate.swift */,
 				04038A1629557C050079954F /* SceneDelegate.swift */,
 				04038A1829557C050079954F /* ViewController.swift */,
 				04963D242955835400AD5765 /* ViewModel.swift */,
+				0477B25B295B26CB0000B1DA /* LiveTimingHub.swift */,
 				04B30B132957291800389F87 /* Scene */,
 				04963D3329559B1200AD5765 /* Test Harness */,
 				04963D2A2955895800AD5765 /* Tracks */,
@@ -136,6 +152,31 @@
 				04963D452955D91D00AD5765 /* InternalMenu */,
 			);
 			path = TrackMap;
+			sourceTree = "<group>";
+		};
+		04468761295AB5FF004A7E00 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				04468762295AB606004A7E00 /* WorldSBK */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		04468762295AB606004A7E00 /* WorldSBK */ = {
+			isa = PBXGroup;
+			children = (
+				04468763295AB6AF004A7E00 /* UpdateEvent.swift */,
+			);
+			path = WorldSBK;
+			sourceTree = "<group>";
+		};
+		0464A3122958B261008F082B /* Competitors */ = {
+			isa = PBXGroup;
+			children = (
+				0464A3132958B279008F082B /* CompetitorsViewController.swift */,
+				0464A315295964B7008F082B /* CompetitorCollectionViewListCell.swift */,
+			);
+			path = Competitors;
 			sourceTree = "<group>";
 		};
 		04963D2A2955895800AD5765 /* Tracks */ = {
@@ -159,6 +200,7 @@
 			children = (
 				04963D1F29557F2300AD5765 /* UIStackView+Builder.swift */,
 				04B30B112957208000389F87 /* PaddedLabel.swift */,
+				0464A3102958B13E008F082B /* Sequence+SortedKeyPath.swift */,
 				04B30B072957065300389F87 /* KeyedDecodingContainer+Dictionary.swift */,
 				04963D432955CF8D00AD5765 /* UIColor+Adjust.swift */,
 				04963D3129559A1000AD5765 /* UIBezierPath+Length.swift */,
@@ -212,6 +254,7 @@
 				04B30B0D29570B9700389F87 /* TimetableUpdate.swift */,
 				04B30B0F29570C2700389F87 /* EventUpdate.swift */,
 				04B30B1C29584CFF00389F87 /* CompetitorUpdate .swift */,
+				0477B25D295B50AA0000B1DA /* ResultUpdate.swift */,
 			);
 			path = "Event Updates";
 			sourceTree = "<group>";
@@ -229,6 +272,7 @@
 		04B30B1E295851A000389F87 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0464A3122958B261008F082B /* Competitors */,
 				04B30B21295851BA00389F87 /* Track Display */,
 			);
 			path = "View Controllers";
@@ -328,10 +372,12 @@
 				04963D252955835400AD5765 /* ViewModel.swift in Sources */,
 				04B30B1029570C2700389F87 /* EventUpdate.swift in Sources */,
 				04963D442955CF8D00AD5765 /* UIColor+Adjust.swift in Sources */,
+				0464A316295964B7008F082B /* CompetitorCollectionViewListCell.swift in Sources */,
 				04B30B0E29570B9700389F87 /* TimetableUpdate.swift in Sources */,
 				04B30B122957208000389F87 /* PaddedLabel.swift in Sources */,
 				04038A1929557C050079954F /* ViewController.swift in Sources */,
 				04963D3F2955AC1800AD5765 /* UserDefaults+Settings.swift in Sources */,
+				04468764295AB6AF004A7E00 /* UpdateEvent.swift in Sources */,
 				04963D2029557F2300AD5765 /* UIStackView+Builder.swift in Sources */,
 				04963D272955858B00AD5765 /* NotImplementedError.swift in Sources */,
 				04038A1529557C050079954F /* AppDelegate.swift in Sources */,
@@ -341,10 +387,13 @@
 				04963D3529559B2100AD5765 /* RaceReplayer.swift in Sources */,
 				04B30B1B29572E0800389F87 /* TrackViewController.swift in Sources */,
 				04B30B0A2957076D00389F87 /* NoteUpdate.swift in Sources */,
+				0464A3112958B13E008F082B /* Sequence+SortedKeyPath.swift in Sources */,
+				0464A3142958B279008F082B /* CompetitorsViewController.swift in Sources */,
 				04B30B082957065300389F87 /* KeyedDecodingContainer+Dictionary.swift in Sources */,
 				04B30B1D29584CFF00389F87 /* CompetitorUpdate .swift in Sources */,
 				04B30B152957292100389F87 /* SKSmoothCameraNode.swift in Sources */,
 				04B30B032956FC9500389F87 /* RiderUpdate.swift in Sources */,
+				0477B25E295B50AA0000B1DA /* ResultUpdate.swift in Sources */,
 				04B30B172957293100389F87 /* SKSmoothCameraNode+Extensions.swift in Sources */,
 				04963D3C2955A52100AD5765 /* Competitors.swift in Sources */,
 				04963D3229559A1000AD5765 /* UIBezierPath+Length.swift in Sources */,
@@ -352,6 +401,7 @@
 				04038A1729557C050079954F /* SceneDelegate.swift in Sources */,
 				04B30B1929572B4900389F87 /* ScrollScene.swift in Sources */,
 				04963D3829559B4300AD5765 /* ReplayUpdate.swift in Sources */,
+				0477B25C295B26CB0000B1DA /* LiveTimingHub.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +538,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TrackMap/TrackMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QCMC576A93;
@@ -504,6 +555,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yoshimi-robotics.TrackMap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -515,6 +569,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TrackMap/TrackMap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QCMC576A93;
@@ -531,6 +586,9 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yoshimi-robotics.TrackMap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

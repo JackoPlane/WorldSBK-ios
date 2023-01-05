@@ -21,7 +21,7 @@ public enum RiderBoxState: Int, Codable, CustomStringConvertible {
 
 }
 
-struct RiderUpdate: ReplayEventUpdate, Decodable {
+struct RiderUpdate: ReplayEventUpdate, Codable {
 
     var type: EventUpdateType = .rider
 

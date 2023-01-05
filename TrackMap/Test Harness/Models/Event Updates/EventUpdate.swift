@@ -7,14 +7,73 @@
 
 import Foundation
 
-struct EventUpdate: ReplayEventUpdate, Decodable {
+struct EventUpdate: ReplayEventUpdate, Codable {
 
     var type: EventUpdateType = .event
 
-//    n != null && (n.md != "" && (t = "(" + n.md + ")"), n.gd != "" && (i = n.gd.toUpperCase()), n.sd != "" && (r = "(" + n.sd + ")"), n.pr ? n.ri != null && n.ri.cd.nu != null && ($("#riferimentoNumero").text(n.ri.cd.nu), $("#riferimentoCognome").html(n.ri.cd.co.toUpperCase()), $("#riferimentoNominativo").html(nominativoConduttore(n.ri.cd)), $("#riferimentoMezzo").text(n.ri.cd.me), $("#riferimentoTempo").text(n.ri.tp), $("#riferimentoIntermedio1").text(n.ri.in[0]), $("#riferimentoIntermedio2").text(n.ri.in[1]), $("#riferimentoIntermedio3").text(n.ri.in[2]), $("#riferimenti").show()) : $("#riferimenti").hide(), $("#labelNominativo").text(n.mo ? "RIDER" : "DRIVER"), $("#labelMezzo").text(n.mo ? "BIKE" : "CAR"));
-//    $("#manifestazione").text(t);
-//    $("#gara").text(i);
-//    $("#sessione").text(r)
-//}
+    struct Weather: Codable {
+        let conditions: String
+
+        enum CodingKeys: String, CodingKey {
+            case conditions = "cn"
+        }
+    }
+
+    let name: String
+    let race: String
+    let isMotorcycleEvent: Bool
+
+    let circuitName: String
+    let session: String
+
+    let weather: Weather
+
+    let numberOfCircuitSections: Int
+    let isTrialSession: Bool
+
+    // MARK: - Codable
+
+    enum CodingKeys: String, CodingKey {
+        case name = "md"
+        case race = "gd"
+        case isMotorcycleEvent = "mo"
+
+        case circuitName = "au"
+        case session = "sd"
+
+        case weather = "mt"
+
+        case numberOfCircuitSections = "nt"
+        case isTrialSession = "pr"
+    }
 
 }
+
+
+//{
+//    "timestamp": "2020-03-01T03:58:02Z",
+//    "args": [{
+//        "ta": true,
+//        "mt": {
+//            "tp": 0,
+//            "ta": 0,
+//            "um": 0,
+//            "cn": "Dry"
+//        },
+//        "fu": 11,
+//        "pr": false,
+//        "ri": null,
+//        "gd": "WorldSBK",
+//        "ni": 3,
+//        "md": "Yamaha Finance Australian Round, 28 February - 1 March 2020",
+//        "ga": 1,
+//        "sd": "Race 2",
+//        "au": "PHILL",
+//        "rm": true,
+//        "ma": 1,
+//        "nt": 7,
+//        "se": "003",
+//        "mo": true
+//    }],
+//    "event": "updateEvento"
+//}
